@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prasanna Malla · Software Engineer</title>
+<meta name="description" content="Prasanna Malla is a software engineer in New York building web products with React, TypeScript, Node, and Python.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0b0c'/><circle cx='50' cy='50' r='12' fill='%23ececec'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;650&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b0c;
+    --panel: #101012;
+    --panel-2: #131316;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-soft: rgba(255, 255, 255, 0.05);
+    --ink: #ececec;
+    --muted: #8a8a90;
+    --dim: #56565c;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: rgba(255, 255, 255, 0.16); }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+  /* ---------- Preloader ---------- */
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: var(--bg);
+    display: none;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 34px 38px;
+    clip-path: inset(0 0 0 0);
+  }
+  .pre-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .pre-count {
+    font-family: var(--mono);
+    font-size: clamp(3rem, 9vw, 6rem);
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Atmosphere ---------- */
+  #dust { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 120% 90% at 50% 10%, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
+  }
+  .wrap { position: relative; z-index: 2; }
+  .mono { font-family: var(--mono); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: inline-block;
+  }
+  h1 {
+    font-size: clamp(3rem, 10vw, 6.2rem);
+    font-weight: 650;
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+    margin: 22px 0 26px;
+  }
+  h1 .word { display: inline-block; overflow: hidden; vertical-align: bottom; margin-right: 0.22em; }
+  h1 .word:last-child { margin-right: 0; }
+  h1 .ch { display: inline-block; will-change: transform; }
+  .lede {
+    color: var(--muted);
+    font-size: clamp(1.02rem, 2vw, 1.18rem);
+    max-width: 30em;
+  }
+  .lede em { color: var(--ink); font-style: normal; }
+  .hero-links { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 40px; }
+  .hero-links a {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 2px;
+    border-bottom: 1px solid var(--line);
+    transition: color 0.25s ease, border-color 0.25s ease;
+    display: inline-block;
+  }
+  .hero-links a:hover { color: var(--ink); border-color: var(--ink); }
+  a:focus-visible, button:focus-visible {
+    outline: 1px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  .scroll-cue {
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .scroll-cue::after {
+    content: "";
+    width: 1px;
+    height: 44px;
+    background: linear-gradient(to bottom, var(--dim), transparent);
+    animation: drop 2.6s ease-in-out infinite;
+  }
+  @keyframes drop {
+    0% { transform: scaleY(0); transform-origin: top; }
+    45% { transform: scaleY(1); transform-origin: top; }
+    55% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+  @media (prefers-reduced-motion: reduce) { .scroll-cue::after { animation: none; } }
+
+  /* ---------- Content ---------- */
+  main { max-width: 660px; margin: 0 auto; padding: 40px 24px 110px; }
+  section { perspective: 1400px; }
+  .tilt { transform-style: preserve-3d; will-change: transform; }
+
+  /* ---------- Time travel panel ---------- */
+  .history { margin-top: 40px; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .panel-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    position: relative;
+  }
+  .panel-bar .title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .rec {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--ink);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.9; } 50% { opacity: 0.15; } }
+  @media (prefers-reduced-motion: reduce) { .rec { animation: none; } }
+  .counter { font-family: var(--mono); font-size: 0.72rem; color: var(--dim); }
+  .counter b { color: var(--ink); font-weight: 500; }
+  .progress {
+    position: absolute;
+    left: 0; bottom: -1px;
+    height: 1px;
+    width: 100%;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .snap {
+    padding: 30px 26px 26px;
+    min-height: 250px;
+  }
+  .snap .years {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    display: inline-block;
+  }
+  .snap h2 {
+    font-size: 1.35rem;
+    font-weight: 650;
+    letter-spacing: -0.018em;
+    margin: 8px 0 2px;
+  }
+  .snap .where { color: var(--dim); font-size: 0.88rem; }
+  .snap p { margin-top: 14px; color: #b9b9be; max-width: 34em; }
+  .snap .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+  .snap .tags span {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 3px 10px;
+  }
+
+  /* ---------- Sections ---------- */
+  main section { margin-top: 84px; }
+  main section.history { margin-top: 40px; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--dim);
+    display: block;
+    margin-bottom: 18px;
+  }
+
+  .now-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 26px 26px;
+    background: var(--panel);
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .now-card:hover { border-color: rgba(255, 255, 255, 0.22); background: var(--panel-2); }
+  .now-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .now-head h2 { font-size: 1.2rem; font-weight: 650; letter-spacing: -0.015em; }
+  .now-head span { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); white-space: nowrap; }
+  .now-card p { color: var(--muted); margin-top: 10px; max-width: 33em; }
+
+  .oss { list-style: none; }
+  .oss li { border-bottom: 1px solid var(--line-soft); }
+  .oss li:first-child { border-top: 1px solid var(--line-soft); }
+  .oss a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    padding: 17px 4px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .oss .name { font-weight: 500; transition: opacity 0.2s ease; }
+  .oss a:hover .name { opacity: 0.6; }
+  .oss .desc { color: var(--dim); font-size: 0.88rem; text-align: right; }
+
+  @media (max-width: 520px) {
+    .hero { padding: 0 22px; }
+    .oss a { flex-direction: column; gap: 2px; }
+    .oss .desc { text-align: left; }
+    .preloader { padding: 26px; }
+  }
+</style>
+</head>
+<body>
+<div class="preloader" aria-hidden="true">
+  <span class="pre-label">Prasanna Malla — Portfolio</span>
+  <span class="pre-count">000</span>
+</div>
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-inner">
+      <span class="eyebrow">Software Engineer — New York</span>
+      <h1 id="name">Prasanna Malla</h1>
+      <p class="lede">I make software, storefronts, ai-tooling with <em>TypeScript, React, and Python</em>.</p>
+      <nav class="hero-links" aria-label="Links">
+        <a href="https://github.com/prasmalla" class="magnetic">github</a>
+        <a href="https://www.linkedin.com/in/prasanna-malla" class="magnetic">linkedin</a>
+      </nav>
+    </div>
+    <div class="scroll-cue">scroll</div>
+  </header>
+
+  <main>
+    <section class="history" aria-label="Career history">
+      <div class="panel">
+        <div class="panel-bar">
+          <span class="title"><span class="rec" aria-hidden="true"></span>Time Travel</span>
+          <span class="counter">snapshot <b id="snapNum">1</b> / 5</span>
+          <span class="progress" aria-hidden="true"></span>
+        </div>
+        <div class="snap" id="snap" aria-live="polite"></div>
+
+      </div>
+    </section>
+
+    <section class="rise">
+      <span class="section-label">Currently building</span>
+      <a class="now-card" href="https://yaaa.cool">
+        <div class="now-head">
+          <h2>YAAA.cool</h2>
+          <span>yaaa.cool ↗</span>
+        </div>
+        <p>A voice-first self-learning AI assistant for your knowledge and workflows. It hears you in real-time, talks back, and reaches you on Telegram, Discord, SMS, or a phone call.</p>
+      </a>
+    </section>
+
+    <section class="rise">
+      <span class="section-label">Open source</span>
+      <ul class="oss">
+        <li><a href="https://github.com/open-source-labs/reactime">
+          <span class="name">Reactime</span>
+          <span class="desc">time travel debugging for React state</span>
+        </a></li>
+        <li><a href="https://github.com/vendure-ecommerce/vendure">
+          <span class="name">Vendure</span>
+          <span class="desc">contributor · TypeScript headless commerce</span>
+        </a></li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
+  const cinematic = hasGsap && !reduced;
+
+  /* =========================================================
+     Snapshots (chronological: the scroll scrubs 2012 → now)
+     ========================================================= */
+  const SNAPSHOTS = [
+    {
+      years: "2012 – 2015",
+      title: "Web Developer, Kaufmann Mercantile",
+      where: "Brooklyn, NY",
+      body: "My first engineering job. Moved a storefront off Shopify onto Spree, an open source Rails platform, then spent years making checkout faster and A/B testing what actually converts. Learned that caching is a feature and that users will surprise you every time.",
+      tags: ["Ruby on Rails", "JavaScript", "Optimizely", "AWS S3 + CloudFront"]
+    },
+    {
+      years: "2015",
+      title: "Grow your own food",
+      where: "Kathmandu → New York",
+      body: "After the 2015 earthquake I went back to Nepal and came home with a question about organic food and technology. Spent six months at NY Sun Works, a nonprofit that builds hydroponic science labs in NYC schools, building growing systems and learning about plants and fish care.",
+      tags: ["Hydroponics", "Aquaponics"]
+    },
+    {
+      years: "2016 – 2019",
+      title: "Founder, OM Aquaponics",
+      where: "Kathmandu, Nepal",
+      body: "Built aquaponic growing systems and taught farmers and families to run their own. Wrote the monitoring layer: a Raspberry Pi in Python watching water levels, pH, and temperature, timer-based pump control.",
+      tags: ["Python", "Raspberry Pi", "sensors", "teaching"]
+    },
+    {
+      years: "2019 – 2020",
+      title: "Codesmith, then Reactime",
+      where: "New York, NY",
+      body: "Went deep on JavaScript and computer science fundamentals, then helped build Reactime, a Chrome extension that records your React app's state so you can step back through it. The panel you are using right now is a small homage to it.",
+      tags: ["React", "JavaScript", "Chrome DevTools", "open source"]
+    },
+    {
+      years: "2020 – now",
+      title: "Independent, CALLiT.today",
+      where: "New York, NY",
+      body: "Went out on my own: full stack builds for clients and AI workflow consulting. Most recently a subscription SaaS platform for compliance recordkeeping in a regulated industry, Next.js and TypeScript front to back, with tiered billing and encrypted document storage.",
+      tags: ["Next.js", "TypeScript", "PostgreSQL", "LLM integrations"]
+    }
+  ];
+
+  const snap = document.getElementById("snap");
+  const num = document.getElementById("snapNum");
+  let i = -1;
+
+  function render(idx) {
+    const s = SNAPSHOTS[idx];
+    snap.innerHTML =
+      '<span class="years">' + s.years + '</span>' +
+      '<h2>' + s.title + '</h2>' +
+      '<div class="where">' + s.where + '</div>' +
+      '<p>' + s.body + '</p>' +
+      '<div class="tags">' + s.tags.map(t => '<span>' + t + '</span>').join('') + '</div>';
+    num.textContent = idx + 1;
+  }
+
+  function go(target) {
+    if (target === i || target < 0 || target >= SNAPSHOTS.length) return;
+    i = target;
+    if (!cinematic) { render(i); return; }
+    // Snapshot swap: old content sinks into depth, new one resolves forward
+    gsap.timeline()
+      .to(snap, { opacity: 0, z: -40, filter: "blur(5px)", duration: 0.18, ease: "power2.in" })
+      .add(() => render(i))
+      .fromTo(snap,
+        { opacity: 0, z: 50, filter: "blur(5px)" },
+        { opacity: 1, z: 0, filter: "blur(0px)", duration: 0.34, ease: "power3.out" });
+  }
+
+  go(0);
+
+  /* =========================================================
+     3D dust field (camera dolly through an endless volume)
+     ========================================================= */
+  const canvas = document.getElementById("dust");
+  const ctx = canvas.getContext("2d");
+  const DEPTH = 2600, FOV = 620, NEAR = 30, DRIFT = 0.12, SCROLL_RATE = 0.9;
+  let w, h, cx, cy, dpr, particles = [];
+  let camZ = 0, smoothScroll = 0;
+  let mx = 0, my = 0, smx = 0, smy = 0;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth; h = window.innerHeight;
+    cx = w / 2; cy = h / 2;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    canvas.style.width = w + "px"; canvas.style.height = h + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    seed();
+  }
+  function seed() {
+    particles = [];
+    const count = Math.round(Math.min(380, (w * h) / 4200));
+    const sx = w * 1.4, sy = h * 1.4;
+    for (let n = 0; n < count; n++) {
+      particles.push({
+        x: (Math.random() - 0.5) * sx * 2,
+        y: (Math.random() - 0.5) * sy * 2,
+        z: Math.random() * DEPTH,
+        r: 0.5 + Math.random() * 1.3,
+        a: 0.25 + Math.random() * 0.55,
+        wob: Math.random() * Math.PI * 2,
+        wobSpeed: 0.0015 + Math.random() * 0.003,
+        tw: Math.random() * Math.PI * 2,
+        twSpeed: 0.005 + Math.random() * 0.011
+      });
+    }
+  }
+  function drawField(animate) {
+    ctx.clearRect(0, 0, w, h);
+    smoothScroll += (window.scrollY - smoothScroll) * 0.06;
+    smx += (mx - smx) * 0.035;
+    smy += (my - smy) * 0.035;
+    if (animate) camZ += DRIFT;
+    const cam = camZ + smoothScroll * SCROLL_RATE;
+    const yaw = smx * 0.22, pitch = smy * 0.16;
+    const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+    const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+    for (const p of particles) {
+      p.wob += p.wobSpeed; p.tw += p.twSpeed;
+      let rz = (p.z - cam) % DEPTH;
+      if (rz < 0) rz += DEPTH;
+      rz += NEAR;
+      const rx = p.x + Math.sin(p.wob) * 18;
+      const ry = p.y + Math.cos(p.wob * 0.8) * 12;
+      const x1 = rx * cosY - rz * sinY;
+      const z1 = rx * sinY + rz * cosY;
+      const y1 = ry * cosP - z1 * sinP;
+      const z2 = ry * sinP + z1 * cosP;
+      if (z2 <= NEAR) continue;
+      const scale = FOV / z2;
+      const sx2 = cx + x1 * scale, sy2 = cy + y1 * scale;
+      if (sx2 < -8 || sx2 > w + 8 || sy2 < -8 || sy2 > h + 8) continue;
+      const fog = 1 - (z2 - NEAR) / DEPTH;
+      const alpha = p.a * fog * fog * (0.78 + 0.22 * Math.sin(p.tw));
+      if (alpha < 0.008) continue;
+      ctx.beginPath();
+      ctx.arc(sx2, sy2, Math.min(p.r * scale * 2.4, 3.2), 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(236,236,236," + alpha.toFixed(3) + ")";
+      ctx.fill();
+    }
+  }
+  window.addEventListener("resize", resize);
+  window.addEventListener("pointermove", e => {
+    mx = e.clientX / w - 0.5;
+    my = e.clientY / h - 0.5;
+  });
+  resize();
+
+  /* =========================================================
+     Static fallback (no GSAP / reduced motion): everything
+     visible, dust static or gently animated, no pin.
+     ========================================================= */
+  if (!cinematic) {
+    if (reduced) { drawField(false); }
+    else { (function loop() { drawField(true); requestAnimationFrame(loop); })(); }
+    return;
+  }
+
+  /* =========================================================
+     Cinematic build: Lenis + GSAP + ScrollTrigger
+     ========================================================= */
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Smooth inertial scroll
+  let lenis = null;
+  if (typeof window.Lenis !== "undefined") {
+    lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1 });
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  // Dust field rides the GSAP ticker (one clock for everything)
+  gsap.ticker.add(() => drawField(true));
+
+  /* --- Split the name into masked characters --- */
+  const nameEl = document.getElementById("name");
+  const words = nameEl.textContent.trim().split(/\s+/);
+  nameEl.textContent = "";
+  words.forEach(word => {
+    const wSpan = document.createElement("span");
+    wSpan.className = "word";
+    [...word].forEach(chr => {
+      const c = document.createElement("span");
+      c.className = "ch";
+      c.textContent = chr;
+      wSpan.appendChild(c);
+    });
+    nameEl.appendChild(wSpan);
+  });
+  const chars = nameEl.querySelectorAll(".ch");
+
+  /* --- Preloader → hero entrance (one orchestrated sequence) --- */
+  const pre = document.querySelector(".preloader");
+  const preCount = document.querySelector(".pre-count");
+  pre.style.display = "flex";
+  const counter = { v: 0 };
+
+  gsap.set(chars, { yPercent: 112 });
+  gsap.set([".lede", ".hero-links a"], { opacity: 0, y: 26 });
+  gsap.set(".eyebrow", { opacity: 0, letterSpacing: "0.55em" });
+  gsap.set(".scroll-cue", { opacity: 0 });
+
+  gsap.timeline()
+    .to(counter, {
+      v: 100, duration: 1.5, ease: "power2.inOut",
+      onUpdate: () => preCount.textContent = String(Math.round(counter.v)).padStart(3, "0")
+    })
+    .to(pre, { clipPath: "inset(0 0 100% 0)", duration: 0.9, ease: "power4.inOut" }, "+=0.15")
+    .set(pre, { display: "none" })
+    .to(chars, { yPercent: 0, duration: 1.1, stagger: 0.032, ease: "power4.out" }, "-=0.62")
+    .to(".eyebrow", { opacity: 1, letterSpacing: "0.22em", duration: 1.2, ease: "power3.out" }, "<0.05")
+    .to(".lede", { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, "<0.25")
+    .to(".hero-links a", { opacity: 1, y: 0, duration: 0.8, stagger: 0.09, ease: "power3.out" }, "<0.15")
+    .to(".scroll-cue", { opacity: 1, duration: 0.9 }, "<0.4");
+
+  /* --- Hero dissolves as the camera dollies past it --- */
+  gsap.to(".hero-inner", {
+    yPercent: -16, scale: 0.95, opacity: 0, ease: "none",
+    scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom 35%", scrub: true }
+  });
+  // Scroll cue: dies on first scroll, never returns
+  ScrollTrigger.create({
+    start: 40, once: true,
+    onEnter: () => gsap.to(".scroll-cue", { opacity: 0, duration: 0.7, overwrite: true })
+  });
+
+  /* --- The set piece: pinned Time Travel, scrubbed by scroll --- */
+  const history = document.querySelector(".history");
+  const panel = document.querySelector(".panel");
+  const SEGMENTS = SNAPSHOTS.length;
+
+  const pinTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: history,
+      start: "top 14%",
+      end: "+=" + (SEGMENTS * 60) + "%",
+      pin: true,
+      scrub: 0.5,
+      anticipatePin: 1,
+      onUpdate: self => {
+        const idx = Math.min(SEGMENTS - 1, Math.floor(self.progress * SEGMENTS));
+        go(idx);
+      }
+    }
+  });
+  // Bar completes before the pin releases, then holds full —
+  // otherwise it only reaches 100% at the instant the panel scrolls away
+  pinTl.to(".progress", { scaleX: 1, ease: "none", duration: 0.88 })
+       .to({}, { duration: 0.12 });
+
+  // Panel flies in from depth before it pins
+  gsap.from(panel, {
+    y: 90, z: -160, rotateX: 9, opacity: 0, filter: "blur(8px)",
+    transformPerspective: 1200, duration: 1.2, ease: "power4.out",
+    scrollTrigger: { trigger: history, start: "top 92%" }
+  });
+
+  // Arrow keys jump the scroll to a snapshot's position within the pin
+  function jumpTo(idx) {
+    const st = pinTl.scrollTrigger;
+    const target = st.start + ((idx + 0.5) / SEGMENTS) * (st.end - st.start);
+    if (lenis) lenis.scrollTo(target, { duration: 1.1 });
+    else window.scrollTo({ top: target, behavior: "smooth" });
+  }
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft" && i > 0) jumpTo(i - 1);
+    if (e.key === "ArrowRight" && i < SEGMENTS - 1) jumpTo(i + 1);
+  });
+
+  /* --- Sections after the set piece: 3D arrivals --- */
+  gsap.utils.toArray(".rise").forEach(sec => {
+    const label = sec.querySelector(".section-label");
+    const bodyEl = sec.querySelector(".now-card, .oss");
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: sec, start: "top 86%" }
+    });
+    tl.from(label, { opacity: 0, letterSpacing: "0.6em", duration: 0.9, ease: "power3.out" })
+      .from(bodyEl, {
+        y: 70, z: -140, rotateX: 8, opacity: 0, filter: "blur(8px)",
+        transformPerspective: 1200, duration: 1.15, ease: "power4.out"
+      }, "<0.12");
+    const rows = sec.querySelectorAll(".oss li");
+    if (rows.length) {
+      gsap.from(rows, {
+        opacity: 0, x: -26, duration: 0.8, stagger: 0.12, ease: "power3.out",
+        scrollTrigger: { trigger: sec, start: "top 82%" }
+      });
+    }
+  });
+
+  /* --- Magnetic hero links --- */
+  if (canHover) {
+    document.querySelectorAll(".magnetic").forEach(el => {
+      el.addEventListener("pointermove", e => {
+        const r = el.getBoundingClientRect();
+        gsap.to(el, {
+          x: (e.clientX - r.left - r.width / 2) * 0.35,
+          y: (e.clientY - r.top - r.height / 2) * 0.45,
+          duration: 0.4, ease: "power3.out"
+        });
+      });
+      el.addEventListener("pointerleave", () =>
+        gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" }));
+    });
+  }
+
+  /* --- Card tilt on the YAAA card (panel is busy being pinned) --- */
+  if (canHover) {
+    const card = document.querySelector(".now-card");
+    card.classList.add("tilt");
+    const rX = gsap.quickTo(card, "rotationX", { duration: 0.5, ease: "power3.out" });
+    const rY = gsap.quickTo(card, "rotationY", { duration: 0.5, ease: "power3.out" });
+    card.addEventListener("pointermove", e => {
+      const r = card.getBoundingClientRect();
+      rX(-((e.clientY - r.top) / r.height - 0.5) * 5);
+      rY(((e.clientX - r.left) / r.width - 0.5) * 6);
+    });
+    card.addEventListener("pointerleave", () => { rX(0); rY(0); });
+  }
+})();
+</script>
+</body>
+</html>
